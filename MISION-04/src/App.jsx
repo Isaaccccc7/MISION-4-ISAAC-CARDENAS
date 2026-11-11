@@ -1,18 +1,27 @@
-import Formulario from "./componentes/Formulario";
+import { useState } from "react";
+import "./App.css";
+
+import FormularioCancion from "./componentes/Formulario";
 import ListaCanciones from "./componentes/ListaCanciones";
 
 function App() {
-  return (
-    <>
-      <h1>🎵 MusicHub</h1>
-      <p>Biblioteca musical personal</p>
+  const [cancionesGuardadas, setCancionesGuardadas] = useState([]);
 
-      <Formulario />
+  return (
+    <div className="app">
+      <h1>🎵 MusicHub</h1>
+      <p>Tu biblioteca musical personal</p>
+
+      <FormularioCancion
+        setCancionesGuardadas={setCancionesGuardadas}
+      />
 
       <hr />
 
-      <ListaCanciones />
-    </>
+      <ListaCanciones
+        cancionesGuardadas={cancionesGuardadas}
+      />
+    </div>
   );
 }
 

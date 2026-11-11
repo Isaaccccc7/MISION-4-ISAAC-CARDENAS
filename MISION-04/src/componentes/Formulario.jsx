@@ -2,69 +2,144 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { esquemaCancion } from "../esquemas/esquemaCancion";
 
-export default function FormularioCancion() {
-
+export default function FormularioCancion({
+  setCancionesGuardadas,
+}) {
   const {
     register,
     handleSubmit,
     reset,
-    formState: { errors }
+    formState: { errors },
   } = useForm({
-    resolver: zodResolver(esquemaCancion)
+    resolver: zodResolver(esquemaCancion),
   });
 
   const enviar = (datos) => {
-    console.log(datos);
+    setCancionesGuardadas((anteriores) => [
+      ...anteriores,
+      datos,
+    ]);
+
     reset();
   };
 
   return (
     <form onSubmit={handleSubmit(enviar)}>
+      <label htmlFor="artista">
+        Artista
+      </label>
 
       <input
+        id="artista"
         placeholder="Artista"
         {...register("artista")}
+        aria-invalid={!!errors.artista}
+        aria-describedby="error-artista"
       />
 
-      <p>{errors.artista?.message}</p>
+      {errors.artista && (
+        <p
+          id="error-artista"
+          role="alert"
+        >
+          {errors.artista.message}
+        </p>
+      )}
+
+      <label htmlFor="cancion">
+        Canción
+      </label>
 
       <input
+        id="cancion"
         placeholder="Canción"
         {...register("cancion")}
+        aria-invalid={!!errors.cancion}
+        aria-describedby="error-cancion"
       />
 
-      <p>{errors.cancion?.message}</p>
+      {errors.cancion && (
+        <p
+          id="error-cancion"
+          role="alert"
+        >
+          {errors.cancion.message}
+        </p>
+      )}
+
+      <label htmlFor="genero">
+        Género
+      </label>
 
       <input
+        id="genero"
         placeholder="Género"
         {...register("genero")}
+        aria-invalid={!!errors.genero}
+        aria-describedby="error-genero"
       />
 
-      <p>{errors.genero?.message}</p>
+      {errors.genero && (
+        <p
+          id="error-genero"
+          role="alert"
+        >
+          {errors.genero.message}
+        </p>
+      )}
+
+      <label htmlFor="anio">
+        Año
+      </label>
 
       <input
+        id="anio"
         type="number"
         placeholder="Año"
-        {...register("anio", { valueAsNumber: true })}
+        {...register("anio", {
+          valueAsNumber: true,
+        })}
+        aria-invalid={!!errors.anio}
+        aria-describedby="error-anio"
       />
 
-      <p>{errors.anio?.message}</p>
+      {errors.anio && (
+        <p
+          id="error-anio"
+          role="alert"
+        >
+          {errors.anio.message}
+        </p>
+      )}
+
+      <label htmlFor="valoracion">
+        Valoración (1-5)
+      </label>
 
       <input
+        id="valoracion"
         type="number"
         min="1"
         max="5"
         {...register("valoracion", {
-          valueAsNumber: true
+          valueAsNumber: true,
         })}
+        aria-invalid={!!errors.valoracion}
+        aria-describedby="error-valoracion"
       />
 
-      <p>{errors.valoracion?.message}</p>
+      {errors.valoracion && (
+        <p
+          id="error-valoracion"
+          role="alert"
+        >
+          {errors.valoracion.message}
+        </p>
+      )}
 
-      <button>
+      <button type="submit">
         Guardar canción
       </button>
-
     </form>
   );
 }

@@ -1,15 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
-import { buscarCanciones } from "../servicios/canciones";
+import { obtenerCanciones } from "../servicios/canciones";
 
-export default function ListaCanciones() {
-
+export default function ListaCanciones({
+  cancionesGuardadas,
+}) {
   const {
     data,
     isPending,
-    isError
+    isError,
+    error,
   } = useQuery({
     queryKey: ["canciones"],
-    queryFn: () => buscarCanciones("coldplay")
+    queryFn: obtenerCanciones,
   });
 
   if (isPending) {
@@ -17,16 +19,56 @@ export default function ListaCanciones() {
   }
 
   if (isError) {
-    return <p>Error al cargar.</p>;
+    return <p>{error.message}</p>;
   }
 
   return (
-    <ul>
-      {data.results.map(cancion => (
-        <li key={cancion.trackId}>
-          {cancion.artistName} - {cancion.trackName}
-        </li>
-      ))}
-    </ul>
+    <>
+      <h2>Canciones de la API</h2>
+
+      <ul>
+        {data.map((cancion) => (
+          <li key={cancion.id}>
+            <strong>{cancion.titulo}</strong>
+            <br />
+            Artista: {cancion.artista}
+            <br />
+            Género: {cancion.genero}
+            <br />
+            Año: {cancion.anio}
+            <br />
+            {cancion.imagen && (
+              <img
+                src={cancion.imagen}
+                alt={cancion.titulo}
+              />
+            )}
+          </li>
+        ))}
+      </ul>
+
+      <h2>Mis canciones guardadas</h2>
+
+      {cancionesGuardadas.length === 0 ? (
+        <p>No hay canciones guardadas todavía.</p>
+      ) : (
+        <ul>
+          {cancionesGuardadas.map((cancion, index) => (
+            <li key={index}>
+              <strong>{cancion.cancion}</strong>
+              <br />
+              Artista: {cancion.artista}
+              <br />
+              Género: {cancion.genero}
+              <br />
+              Año: {cancion.anio}
+              <br />
+              Valoración:
+              {" ⭐".repeat(cancion.valoracion)}
+            </li>
+          ))}
+        </ul>
+      )}
+    </>
   );
 }
